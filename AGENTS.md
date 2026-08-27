@@ -1,7 +1,7 @@
 # asymptote-zh 工作指南
 
 Asymptote 官方手册（`asymptote.pdf`）中文翻译项目。源文档为 **Texinfo** 格式
-（上游 `vectorgraphics/asymptote` 仓库的 `doc/` 目录，即本仓库 `asy-doc/`）。
+（上游 `vectorgraphics/asymptote` 仓库的 `doc/` 目录，基准为 `asy-doc-latest/`）。
 
 本工作流由 `tex-manual-translation` skill（LaTeX 版）适配为 Texinfo 版：
 翻译纪律、术语表、检查脚本方法论照搬；构建链、中文环境、元素规则按下文本项目化。
@@ -14,7 +14,7 @@ asy-doc/                 上游旧版存档（只读；历史对照用）
 asy-doc-latest/ 其余资产与 asy-doc 相同处沿用根目录现有副本
 asymptote.en.texi        英文原版快照（review 与对照用，只读）
 asymptote-zh.pdf         最终产物（214 页）
-version.texi             已自建：@set VERSION 2.92 / Datadir / Docdir
+version.texi             已自建：@set VERSION 3.14git / Datadir / Docdir
 txi-zh.tex               字体覆盖层（中文思源宋体 + 西文 Libertinus/LMMono）
 latexusage.pdf           抽取的缺图（来自官方 asymptote.pdf 第 120 页）
 *.asy *.pdf options …    构建依赖（@verbatiminclude/@image 引用），只读
@@ -24,7 +24,7 @@ glossary.md              术语表（含 140+ 条目），后续修订时共享�
 ```
 
 除 `asymptote-zh.texi`、`glossary.md`、`scripts/`、`AGENTS.md` 外的一切保持只读。
-若发现缺依赖文件，从 `asy-doc/` 复制到根目录，不动原目录。
+若发现缺依赖文件，从 `asy-doc-latest/` 复制到根目录，不动原目录。
 
 ## 1. 构建工作流（已端到端验证，约 10 秒/轮）
 
@@ -41,8 +41,8 @@ python scripts/texindex-mini.py asymptote-zh.cp
 xetex -interaction=nonstopmode asymptote-zh.texi
 ```
 
-验收：`grep -c '^!' asymptote-zh.log` 为 0；页数以英文基准 225 页附近浮动为正常
-（Libertinus 与官方 CM 字宽不同）。抽查：`pdftoppm -png -r 60 -f N -l N
+验收：`grep -c '^!' asymptote-zh.log` 为 0；译稿基准约 **214 页**（中文较
+英文紧凑；英文 Libertinus 基准为 225 页）。抽查：`pdftoppm -png -r 60 -f N -l N
 asymptote-zh.pdf pg` 渲染目检。**禁止改用 pdftex**（中文会被整体丢弃）；
 编译失败时**先删中间文件再重试**；禁止 `--shell-escape` 类危险选项。
 
@@ -150,8 +150,9 @@ globaldefs 下失效；且 `@` 此时是转义符，`` `\@ `` 取不到字符码
 
 ## 6. 已知事项
 
-- `version.texi` 上游构建时生成、仓库无：已自建（§0）；官方自带 PDF 的版本号
-  本身为空串，无对齐负担
+- `version.texi` 上游构建时生成、仓库无：已自建；版本号取自上游 master 的
+  `configure.ac`（`AC_INIT`，当前为 3.14git，快照与 master 的 doc 逐字节一致）。
+  上游发新版后同步快照时仅需改此值重编译
 - `latexusage.pdf` 唯一缺图，抽取自仓库官方 `asymptote.pdf` 第 120 页
 - `texi2any` 在 Windows TeX Live 不存在；出 PDF 一律走 §1 xetex 手动流程。
   需要 node/menu 静态检查时可 `wsl sudo apt install texinfo` 辅助校验
