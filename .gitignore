@@ -1,0 +1,13 @@
+# 编译中间文件（保留 asymptote-zh.pdf 与所有示例 PDF）
+asymptote-zh.aux
+asymptote-zh.cp
+asymptote-zh.cps
+asymptote-zh.fn
+asymptote-zh.ky
+asymptote-zh.pg
+asymptote-zh.toc
+asymptote-zh.tp
+asymptote-zh.vr
+asymptote-zh.log
+asymptote-zh.info
+missfont.log
