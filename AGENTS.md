@@ -17,10 +17,11 @@ asymptote-zh.pdf         最终产物（214 页）
 version.texi             已自建：@set VERSION 3.14git / Datadir / Docdir
 txi-zh.tex               字体覆盖层（中文思源宋体 + 西文 Libertinus/LMMono）
 latexusage.pdf           抽取的缺图（来自官方 asymptote.pdf 第 120 页）
-*.asy *.pdf options …    构建依赖（@verbatiminclude/@image 引用），只读
+FAQ/asy-faq.texi        FAQ 手册源，未翻译（二期翻译对象，可复用本工作流全套设施）
 scripts/                 check_env_balance.py、find_at_before_cjk.py、
                          find_untranslated.py、texindex-mini.py
 glossary.md              术语表（含 140+ 条目），后续修订时共享维护
+
 ```
 
 除 `asymptote-zh.texi`、`glossary.md`、`scripts/`、`AGENTS.md` 外的一切保持只读。
@@ -41,26 +42,25 @@ python scripts/texindex-mini.py asymptote-zh.cp
 xetex -interaction=nonstopmode asymptote-zh.texi
 ```
 
-验收：`grep -c '^!' asymptote-zh.log` 为 0；译稿基准约 **214 页**（中文较
-英文紧凑；英文 Libertinus 基准为 225 页）。抽查：`pdftoppm -png -r 60 -f N -l N
-asymptote-zh.pdf pg` 渲染目检。**禁止改用 pdftex**（中文会被整体丢弃）；
+验收：`grep -c '^!' asymptote-zh.log` 为 0；译稿基准约 **214 页**（中文较英文紧凑；英文 Libertinus 基准为 225 页）。抽查：`pdftoppm -png -r 60 -f N -l N asymptote-zh.pdf pg` 渲染目检。**禁止改用 pdftex**（中文会被整体丢弃）；
 编译失败时**先删中间文件再重试**；禁止 `--shell-escape` 类危险选项。
 
 ## 2. 字体栈（已配置，勿动）
 
-| 用途 | 字体 | 来源 |
-|---|---|---|
-| 中文 | 思源宋体 Noto Serif CJK SC / 楷体 | Windows 系统字体 |
+| 用途                    | 字体                                            | 来源                      |
+| ----------------------- | ----------------------------------------------- | ------------------------- |
+| 中文                    | 思源宋体 Noto Serif CJK SC / 楷体               | Windows 系统字体          |
 | 西文衬线 rm/it/bf/sl/sc | Libertinus Serif（+onum 旧式数字，sc 加 +smcp） | TeX Live libertinus-fonts |
-| 西文无衬线 sf | Libertinus Sans | 同上 |
-| 等宽 tt | Latin Modern Mono | TeX Live lm |
-| 数学 | Computer Modern（默认保留） | TeX Live |
+| 西文无衬线 sf           | Libertinus Sans                                 | 同上                      |
+| 等宽 tt                 | Latin Modern Mono                               | TeX Live lm               |
+| 数学                    | Computer Modern（默认保留）                     | TeX Live                  |
 
 实现于根目录 `txi-zh.tex`：覆盖 `\setfont` 一处生效全部字号组；XeTeX 文件名
 字体必须用 `"[文件.otf]:features"` 方括号语法；`\dimexpr` 尺寸计算必须先除后乘
 （先乘会在大字号溢出 16384pt 上限）。图内文字字体来自嵌入 PDF 本身，随图走。
 
 `txi-zh.tex` 还含四项关键补丁（改动前先理解，删掉会退化）：
+
 1. **粗体形态映射**：texinfo.tex 的标题字号组用 `\rmbshape`/`\itbshape`/
    `\slbshape`/`\sfbshape`/`\scbshape`（bx 系粗体形态），`\westfontfile` 必须映射
    全部九种 shape，否则标题西文落入 `cmr10` 兜底变成 Computer Modern。
@@ -90,6 +90,7 @@ globaldefs 下失效；且 `@` 此时是转义符，`` `\@ `` 取不到字符码
 ### 翻译范围（Texinfo 元素规则）
 
 **不译（保留英文原样）**：
+
 - 所有代码环境与代码命令：`@example`、`@verbatim`、`@verbatiminclude` 引入的
   86 个 `.asy` 文件（含其中注释——本项目明确约定**画图代码内注释不翻译**，
   `.asy` 文件零改动）、`@code`、`@env`、`@file`、`@command`、`@option`、
@@ -100,6 +101,7 @@ globaldefs 下失效；且 `@` 此时是转义符，`` `\@ `` 取不到字符码
 - 工具名、模块名、文件名、命令行选项、键名与选项值（术语表 §glossary）
 
 **要译**：
+
 - `@chapter/@section/@subsection` 标题文本（Texinfo 无 texorpdfstring 机制，
   标题自动进 PDF 书签，直接译即可）
 - 正文段落、`@quotation` 内文字、`@table/@itemize/@enumerate` 的 `@item`
